@@ -1,6 +1,7 @@
 package com.reel.reserve.service;
 
 import com.reel.reserve.dto.BookingsDTO;
+import com.reel.reserve.exception.ReservedSeatException;
 import com.reel.reserve.exception.ResourceNotFoundException;
 import com.reel.reserve.models.*;
 import com.reel.reserve.repository.BookingsRepository;
@@ -27,12 +28,18 @@ public class BookingsService {
     private SeatRepository seatRepository;
     @Autowired
     private MovieScreeningRepository movieScreeningRepository;
-    public String createBooking(BookingsDTO dto) throws ResourceNotFoundException {
+    public String createBooking(BookingsDTO dto) throws ResourceNotFoundException, ReservedSeatException {
+        List<Seat> seats = seatRepository.findAllById(dto.getSeatIds());
+        for (Seat seat: seats) {
+            if (seat.getStatus() == Status.RESERVED || seat.getStatus() == Status.PAID) {
+                throw new ReservedSeatException("Seat:" + seat.get_row()+seat.get_col() + " Already Booked.");
+            }
+        }
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found."));
         MovieScreening screening = movieScreeningRepository.findById(dto.getScreeningId())
                 .orElseThrow(() -> new ResourceNotFoundException("Screening Not Found."));
-        List<Seat> seats = seatRepository.findAllById(dto.getSeatIds());
+
 
         Bookings bookings = new Bookings();
         bookings.setName(user.getName());

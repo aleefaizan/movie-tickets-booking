@@ -1,6 +1,7 @@
 package com.reel.reserve.controller;
 
 import com.reel.reserve.dto.BookingsDTO;
+import com.reel.reserve.exception.ReservedSeatException;
 import com.reel.reserve.exception.ResourceNotFoundException;
 import com.reel.reserve.models.Bookings;
 import com.reel.reserve.service.BookingsService;
@@ -19,7 +20,7 @@ public class BookingsController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
-    public ResponseEntity<String> createBooking(@Valid @RequestBody BookingsDTO dto) throws ResourceNotFoundException {
+    public ResponseEntity<String> createBooking(@Valid @RequestBody BookingsDTO dto) throws ResourceNotFoundException, ReservedSeatException {
         return new ResponseEntity<>(bookingsService.createBooking(dto), HttpStatus.CREATED);
     }
     @GetMapping("/{bookingId}")
