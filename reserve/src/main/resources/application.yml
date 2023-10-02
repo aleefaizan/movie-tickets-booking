@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/reel_reserve
+    username: root
+    password: Oneplus8
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+token:
+  expiration:
+    ms: 3600000
+  secret:
+    key: 85f903ee34f5c4b7109c87439cb220a1dfe582fa920d4831280fc24c039f8ee7
